@@ -14,11 +14,14 @@ def create_app():
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    # Init extensions
+    # Init extensions 
     db.init_app(app)
     migrate = Migrate(app, db)
 
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp)
+
+    from app.routes.user_routes import user_bp
+    app.register_blueprint(user_bp)
 
     return app

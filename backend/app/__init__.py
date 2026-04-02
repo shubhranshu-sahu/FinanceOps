@@ -24,4 +24,10 @@ def create_app():
     from app.routes.user_routes import user_bp
     app.register_blueprint(user_bp)
 
+    from app.routes.transaction_routes import txn_bp
+    app.register_blueprint(txn_bp)
+
+    from app.routes.category_routes import cat_bp
+    app.register_blueprint(cat_bp)
+
     return app

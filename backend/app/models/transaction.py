@@ -15,7 +15,14 @@ class Transaction(db.Model):
         nullable=False
     )
 
-    category = db.Column(db.String(100), nullable=False, index=True)
+    # category = db.Column(db.String(100), nullable=False, index=True)
+    category_id = db.Column(
+    db.Integer,
+    db.ForeignKey("categories.id"),
+    nullable=False,
+    index=True )
+
+
 
     date = db.Column(db.Date, nullable=False, index=True)
 
@@ -40,5 +47,8 @@ class Transaction(db.Model):
         nullable=False,
     )
 
+    # Relationship
+    category = db.relationship("Category", backref="transactions")
+    
     def __repr__(self):
         return f"<Transaction {self.id} - {self.type}>"

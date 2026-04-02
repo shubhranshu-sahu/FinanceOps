@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyc.*
+*.py,cover
+
+# Virtual Environment
+myenv/
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+
+backend/.env
+
+# Flask
+instance/
+.webassets-cache
+
+# Alembic
+migrations/versions/*.pyc
+
+# Logs
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+
+# Coverage / testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Misc
+*.sqlite3
+*.db

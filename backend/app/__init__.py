@@ -11,14 +11,18 @@ load_dotenv()
 
 
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
 
     # Config
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
-        "DATABASE_URL",
-        "mysql+pymysql://root:1234@localhost/financeops"
-    )
+    if test_config is None:
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+            "DATABASE_URL",
+            "mysql+pymysql://root:1234@localhost/financeops"
+        )
+    else:
+        app.config.update(test_config)
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
    
     allowed_origins = os.getenv("CORS_ORIGINS", "").split(",")

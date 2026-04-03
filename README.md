@@ -94,6 +94,16 @@ flask db upgrade
 python run.py
 ```
 
-### 3. API Documentation
+### 3. Automated Unit Testing Sandbox
+The system features a decoupled `pytest` validation suite. Running tests will spin up an isolated **in-memory SQLite database** (`sqlite:///:memory:`), execute 6 simulated REST request workflows (checking Authentication, RBAC, and Marshmallow failure captures), and then safely delete the memory block without polluting your real MySQL Database.
+
+```bash
+# Execute the testing module from the backend directory:
+$env:PYTHONPATH="."  # Set the environment path
+pytest tests/ -v     # Ignite the Pytest Engine
+```
+*(On Unix/Mac use `export PYTHONPATH="."`)*
+
+### 4. API Documentation
 Every endpoint, method, and behavioral configuration has been meticulously mapped.  
 👉 **[Click here to read the complete API Documentation](API_DOCS.md)**

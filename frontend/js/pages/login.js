@@ -30,8 +30,7 @@ document.getElementById("loginForm").addEventListener("submit", async function (
         localStorage.setItem("user", JSON.stringify(data.user));
 
         // Redirect
-        window.location.href = "../index.html";
-
+        window.location.href = "dashboard.html";
     } catch (error) {
         errorDiv.innerText = error.message;
     }

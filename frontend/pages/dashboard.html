@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FinanceOps</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Global Loader -->
+    <div id="loader" class="neo-loader-overlay d-none">
+        <div class="neo-loader-spinner"></div>
+        <div class="mt-4 brand-font fs-3 text-dark">PROCESSING...</div>
+    </div>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-neo py-3 mb-5" style="background-color: var(--bg-color);">
+        <div class="container">
+            <a class="navbar-brand fs-3 brand-font text-dark text-decoration-none" href="#">[ Ops ] Dashboard</a>
+            <button class="navbar-toggler border-dark border-3 rounded-0 bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-2 align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark border border-2 border-transparent px-3" href="dashboard.html" style="background-color:#4ade80; border-color:#000!important; box-shadow: 2px 2px 0px #000;">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark nav-hover-fx px-3" href="transactions.html">Transactions</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark nav-hover-fx px-3" href="categories.html" id="catLink">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark nav-hover-fx px-3" href="users.html" id="userLink">Users</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0"><button class="btn btn-neo bg-white py-1 px-3 w-100 fs-6 text-dark" onclick="logout()">Logout</button></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container pb-5 gs-reveal">
+        <h2 class="brand-font mb-4 display-5">/// Financial Analytics</h2>
+
+        <!-- Stats -->
+        <div class="row text-center g-4 mb-5">
+            <div class="col-md-4 gs-stat">
+                <div class="card-neo p-4 h-100" style="background-color: var(--primary-color);">
+                    <h5 class="fw-bolder fs-4">Income</h5>
+                    <h3 id="income" class="mb-0 fw-bold display-4">0</h3>
+                </div>
+            </div>
+            <div class="col-md-4 gs-stat">
+                <div class="card-neo p-4 h-100" style="background-color: var(--secondary-color);">
+                    <h5 class="fw-bolder fs-4">Expense</h5>
+                    <h3 id="expense" class="mb-0 fw-bold display-4">0</h3>
+                </div>
+            </div>
+            <div class="col-md-4 gs-stat">
+                <div class="card-neo p-4 h-100" style="background-color: #fde047;"> <!-- Yellow -->
+                    <h5 class="fw-bolder fs-4">Net Balance</h5>
+                    <h3 id="balance" class="mb-0 fw-bold display-4">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card-neo p-0 bg-white mb-5 gs-table border-0 shadow-none">
+            <h4 class="brand-font mb-4 fs-3">Recent Ledger Entries</h4>
+            <div class="table-responsive">
+                <table class="table table-neo">
+                    <thead>
+                        <tr class="fs-5">
+                            <th>ID</th><th>Amount</th><th>Type</th><th>Category</th><th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentTable" class="fw-bold fs-6"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <!-- Category Breakdown -->
+            <div class="col-md-6 gs-table">
+                <div class="card-neo p-0 bg-transparent border-0 shadow-none h-100">
+                    <h4 class="brand-font mb-4 fs-3">Spending by Category</h4>
+                    <div class="table-responsive">
+                        <table class="table table-neo">
+                            <thead>
+                                <tr class="fs-5"><th>Category</th><th>Total</th></tr>
+                            </thead>
+                            <tbody id="categoryTable" class="fw-bold fs-6"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Monthly Trends -->
+            <div class="col-md-6 gs-table">
+                <div class="card-neo p-0 bg-transparent border-0 shadow-none h-100">
+                    <h4 class="brand-font mb-4 fs-3">Monthly Outflow</h4>
+                    <div class="table-responsive">
+                        <table class="table table-neo">
+                            <thead>
+                                <tr class="fs-5"><th>Month</th><th>Total</th></tr>
+                            </thead>
+                            <tbody id="trendTable" class="fw-bold fs-6"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/pages/dashboard.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.from(".navbar", { y: -80, opacity: 0, duration: 0.5, ease: "power3.out" });
+            gsap.from(".gs-reveal h2", { x: -50, opacity: 0, duration: 0.6, ease: "back.out(1.2)" });
+            gsap.from(".gs-stat", { y: 60, opacity: 0, duration: 0.5, stagger: 0.1, delay: 0.2, ease: "back.out(1.5)" });
+            gsap.from(".gs-table", { y: 60, opacity: 0, duration: 0.6, stagger: 0.15, delay: 0.4, ease: "back.out(1.2)" });
+        });
+    </script>
+</body>
+</html>

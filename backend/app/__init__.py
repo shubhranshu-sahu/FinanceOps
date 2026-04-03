@@ -2,6 +2,12 @@ from flask import Flask
 from .models import db
 from flask_migrate import Migrate
 import os
+from flask_cors import CORS   
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 
 def create_app():
@@ -13,6 +19,11 @@ def create_app():
         "mysql+pymysql://root:1234@localhost/financeops"
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+   
+    allowed_origins = os.getenv("CORS_ORIGINS", "").split(",")
+
+    CORS(app, origins=allowed_origins)
+
 
     # Init extensions 
     db.init_app(app)

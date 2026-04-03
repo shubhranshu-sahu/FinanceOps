@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
-from app.services.category_service import create_category, get_categories
+from app.services.category_service import create_category, get_categories, update_category_status, update_category_name
 from app.middleware.auth_middleware import login_required, role_required
 
 cat_bp = Blueprint("categories", __name__, url_prefix="/categories")
 
 
-@cat_bp.route("/", methods=["POST"])
+@cat_bp.route("", methods=["POST"])
 @login_required
 @role_required("ADMIN")
 def create_cat():
@@ -18,16 +18,18 @@ def create_cat():
         return jsonify({"error": str(e)}), 400
 
 
-@cat_bp.route("/", methods=["GET"])
+@cat_bp.route("", methods=["GET"])
 @login_required
 def list_categories():
-    categories = get_categories()
+    include_disabled = request.args.get("all") == "true"
+    categories = get_categories(include_disabled)
 
     result = []
     for c in categories:
         result.append({
             "id": c.id,
-            "name": c.name
+            "name": c.name,
+            "is_active": c.is_active
         })
 
     return jsonify(result), 200
@@ -42,5 +44,17 @@ def change_category_status(cat_id):
     try:
         update_category_status(cat_id, data["is_active"])
         return jsonify({"message": "Category status updated"}), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@cat_bp.route("/<int:cat_id>", methods=["PUT"])
+@login_required
+@role_required("ADMIN")
+def rename_category(cat_id):
+    data = request.get_json()
+    try:
+        update_category_name(cat_id, data["name"])
+        return jsonify({"message": "Category renamed"}), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400

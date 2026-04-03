@@ -11,7 +11,7 @@ def create_transaction(data, user_id):
     except ValueError:
         raise ValueError("Invalid transaction type")
 
-    # ✅ Validate category
+    #  Validate category
     category = Category.query.get(data["category_id"])
     if not category or not category.is_active:
         raise ValueError("Invalid or inactive category")
@@ -31,9 +31,14 @@ def create_transaction(data, user_id):
     return txn
 
 
-# READ (WITH FILTERS)
-def get_transactions(filters):
-    query = Transaction.query.filter_by(is_deleted=False)
+# READ (WITH FILTERS, SORTING AND PAGINATION)
+def get_transactions(filters, page=1, per_page=10):
+    query = Transaction.query
+
+    if filters.get("deleted") == "true":
+        query = query.filter(Transaction.is_deleted == True)
+    else:
+        query = query.filter(Transaction.is_deleted == False)
 
     # Type filter (ENUM safe)
     if "type" in filters:
@@ -47,7 +52,7 @@ def get_transactions(filters):
     if "category_id" in filters:
         query = query.filter(Transaction.category_id == filters["category_id"])
 
-    # OPTIONAL: filter by category name (JOIN)
+    # filter by category name (JOIN)
     if "category" in filters:
         query = query.join(Category).filter(Category.name == filters["category"].lower())
 
@@ -55,7 +60,11 @@ def get_transactions(filters):
     if "date" in filters:
         query = query.filter(Transaction.date == filters["date"])
 
-    return query.all()
+    # Sorting -> latest first by actual creation time
+    query = query.order_by(Transaction.created_at.desc())
+
+    # Return paginated results
+    return query.paginate(page=page, per_page=per_page, error_out=False)
 
 
 # UPDATE
@@ -103,3 +112,25 @@ def delete_transaction(txn_id):
     db.session.commit()
 
     return txn
+
+# RESTORE (SOFT)
+def restore_transaction(txn_id):
+    txn = Transaction.query.get(txn_id)
+
+    if not txn or not txn.is_deleted:
+        raise ValueError("Transaction not found or not currently in recycle bin")
+
+    txn.is_deleted = False
+    db.session.commit()
+
+    return txn
+
+
+def permanent_delete(txn_id):
+    txn = Transaction.query.get(txn_id)
+
+    if not txn:
+        raise ValueError("Transaction not found")
+
+    db.session.delete(txn)
+    db.session.commit()

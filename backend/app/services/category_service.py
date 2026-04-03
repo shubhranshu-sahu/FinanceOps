@@ -22,6 +22,8 @@ def create_category(data, user_id):
 def get_categories():
     return Category.query.filter_by(is_active=True).all()
 
+
+
 def update_category_status(category_id, is_active):
     category = Category.query.get(category_id)
 

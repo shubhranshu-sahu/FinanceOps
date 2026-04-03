@@ -54,6 +54,15 @@ Based on realistic financial industry logic, the following Role boundaries and s
 
 *All structural requests demand a cryptographically signed JSON Web Token (JWT).*
 
+### Default Evaluation Credentials
+By default, the `/auth/register` pipeline strictly assigns the `VIEWER` class to prevent unauthorized users from instantly mutating data. To grant an evaluator absolute access to all HTTP operations (and the ability to escalate other accounts), a master `ADMIN` instance has been manually seeded into the deployed cloud database. 
+
+**Use these credentials to test Admin-level routes:**
+- **Email:** `admin@gmail.com`
+- **Password:** `admin`
+
+*(This account can dynamically mutate the roles of any other registered users via the 'Users' Dashboard page).*
+
 ---
 
 ## 🚀 Additional Enhancements Executed

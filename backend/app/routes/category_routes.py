@@ -12,6 +12,29 @@ cat_bp = Blueprint("categories", __name__, url_prefix="/categories")
 @login_required
 @role_required("ADMIN")
 def create_cat():
+    """
+    Construct a Data Category Node.
+    ---
+    tags:
+      - Categories
+    security:
+      - Bearer: []
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Cloud Services
+    responses:
+      201:
+        description: Creation success.
+      400:
+        description: Schema validation failed.
+    """
     data = request.get_json()
 
     try:
@@ -30,6 +53,22 @@ def create_cat():
 @login_required
 @role_required("ADMIN", "ANALYST")
 def list_categories():
+    """
+    List Category definitions.
+    ---
+    tags:
+      - Categories
+    security:
+      - Bearer: []
+    parameters:
+      - name: all
+        in: query
+        type: boolean
+        description: "Pull disabled schemas as well."
+    responses:
+      200:
+        description: Successful category extraction.
+    """
     include_disabled = request.args.get("all") == "true"
     categories = get_categories(include_disabled)
 
@@ -48,6 +87,31 @@ def list_categories():
 @login_required
 @role_required("ADMIN")
 def change_category_status(cat_id):
+    """
+    Freeze/Unfreeze Category status.
+    ---
+    tags:
+      - Categories
+    security:
+      - Bearer: []
+    parameters:
+      - name: cat_id
+        in: path
+        type: integer
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            is_active:
+              type: boolean
+              example: false
+    responses:
+      200:
+        description: Status modified.
+    """
     data = request.get_json()
 
     try:
@@ -61,6 +125,33 @@ def change_category_status(cat_id):
 @login_required
 @role_required("ADMIN")
 def rename_category(cat_id):
+    """
+    Modify Category structural string.
+    ---
+    tags:
+      - Categories
+    security:
+      - Bearer: []
+    parameters:
+      - name: cat_id
+        in: path
+        type: integer
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Repurposed Servers
+    responses:
+      200:
+        description: String updated.
+      400:
+        description: Schema error.
+    """
     data = request.get_json()
 
     try:

@@ -2,6 +2,7 @@ from flask import Flask
 from .models import db
 from .limiter import limiter
 from flask_migrate import Migrate
+from flasgger import Swagger
 import os
 from flask_cors import CORS   
 
@@ -34,6 +35,25 @@ def create_app(test_config=None):
     db.init_app(app)
     limiter.init_app(app)
     migrate = Migrate(app, db)
+
+    # Configure Swagger UI 
+    swagger_template = {
+        "swagger": "2.0",
+        "info": {
+            "title": "FinanceOps API Documentation",
+            "description": "Strict Role-Based API Framework for Finance Data Processing.",
+            "version": "1.0.0"
+        },
+        "securityDefinitions": {
+            "Bearer": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header",
+                "description": "JSON Web Token (JWT) Authorization header utilizing the Bearer scheme. Format: \"Bearer {token}\""
+            }
+        }
+    }
+    Swagger(app, template=swagger_template)
 
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp)

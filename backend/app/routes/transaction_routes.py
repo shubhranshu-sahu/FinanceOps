@@ -18,6 +18,41 @@ txn_bp = Blueprint("transactions", __name__, url_prefix="/transactions")
 @login_required
 @role_required("ADMIN")
 def create_txn():
+    """
+    Insert a financial record into the database.
+    ---
+    tags:
+      - Transactions
+    security:
+      - Bearer: []
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            amount:
+              type: number
+              example: 450.50
+            type:
+              type: string
+              example: EXPENSE
+            category_id:
+              type: integer
+              example: 1
+            date:
+              type: string
+              example: 2026-04-05
+            description:
+              type: string
+              example: Quarterly taxes
+    responses:
+      201:
+        description: Transaction inserted perfectly.
+      400:
+        description: Schema validation failed.
+    """
     data = request.get_json()
 
     try:
@@ -36,6 +71,28 @@ def create_txn():
 @login_required
 @role_required("ADMIN", "ANALYST")
 def list_txns():
+    """
+    Query, search, limit, and extract transaction vectors.
+    ---
+    tags:
+      - Transactions
+    security:
+      - Bearer: []
+    parameters:
+      - name: page
+        in: query
+        type: integer
+      - name: per_page
+        in: query
+        type: integer
+      - name: deleted
+        in: query
+        type: boolean
+        description: Access Recycle Bin (Blocks Analysts)
+    responses:
+      200:
+        description: Returns paginated response blocks.
+    """
     filters = request.args.to_dict()
 
     if request.user.role.value == "ANALYST" and filters.get("deleted") == "true":
@@ -74,6 +131,31 @@ def list_txns():
 @login_required
 @role_required("ADMIN")
 def update_txn(txn_id):
+    """
+    Partially edit a transaction parameter.
+    ---
+    tags:
+      - Transactions
+    security:
+      - Bearer: []
+    parameters:
+      - name: txn_id
+        in: path
+        type: integer
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            amount:
+              type: number
+              example: 500.00
+    responses:
+      200:
+        description: Successfully mutated data.
+    """
     data = request.get_json()
 
     try:
@@ -92,6 +174,22 @@ def update_txn(txn_id):
 @login_required
 @role_required("ADMIN")
 def delete_txn(txn_id):
+    """
+    Soft Delete a Transaction into the bin.
+    ---
+    tags:
+      - Transactions
+    security:
+      - Bearer: []
+    parameters:
+      - name: txn_id
+        in: path
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Hidden from main query maps.
+    """
     try:
         delete_transaction(txn_id)
         return jsonify({"message": "Transaction deleted"}), 200
@@ -103,6 +201,22 @@ def delete_txn(txn_id):
 @login_required
 @role_required("ADMIN")
 def restore_txn(txn_id):
+    """
+    Rescue a Soft-Deleted record.
+    ---
+    tags:
+      - Transactions
+    security:
+      - Bearer: []
+    parameters:
+      - name: txn_id
+        in: path
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Restored accurately.
+    """
     try:
         restore_transaction(txn_id)
         return jsonify({"message": "Transaction restored"}), 200
@@ -114,6 +228,22 @@ def restore_txn(txn_id):
 @login_required
 @role_required("ADMIN")
 def permanent_delete_txn(txn_id):
+    """
+    Forcefully drop row from persistent MySQL volumes.
+    ---
+    tags:
+      - Transactions
+    security:
+      - Bearer: []
+    parameters:
+      - name: txn_id
+        in: path
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Irreversible database drop accomplished.
+    """
     try:
         permanent_delete(txn_id)
         return jsonify({"message": "Deleted permanently"}), 200

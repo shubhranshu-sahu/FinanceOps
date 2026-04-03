@@ -1,5 +1,6 @@
 from flask import Flask
 from .models import db
+from .limiter import limiter
 from flask_migrate import Migrate
 import os
 from flask_cors import CORS   
@@ -27,6 +28,7 @@ def create_app():
 
     # Init extensions 
     db.init_app(app)
+    limiter.init_app(app)
     migrate = Migrate(app, db)
 
     from app.routes.auth_routes import auth_bp

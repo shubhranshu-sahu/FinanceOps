@@ -102,7 +102,6 @@ The system features a decoupled `pytest` validation suite. Running tests will sp
 $env:PYTHONPATH="."  # Set the environment path
 pytest tests/ -v     # Ignite the Pytest Engine
 ```
-*(On Unix/Mac use `export PYTHONPATH="."`)*
 
 ### 4. API Documentation
 Every endpoint, method, and behavioral configuration has been meticulously mapped.  

@@ -30,4 +30,7 @@ def create_app():
     from app.routes.category_routes import cat_bp
     app.register_blueprint(cat_bp)
 
+    from app.routes.dashboard_routes import dashboard_bp
+    app.register_blueprint(dashboard_bp)
+
     return app

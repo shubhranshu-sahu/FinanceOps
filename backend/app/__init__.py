@@ -55,6 +55,10 @@ def create_app(test_config=None):
     }
     Swagger(app, template=swagger_template)
 
+    @app.route("/health", methods=["GET"])
+    def parse_health():
+        return {"status": "ok", "service": "FinanceOps"}, 200
+
     from app.routes.auth_routes import auth_bp
     app.register_blueprint(auth_bp)
 

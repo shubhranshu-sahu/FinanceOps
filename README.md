@@ -104,5 +104,8 @@ pytest tests/ -v     # Ignite the Pytest Engine
 ```
 
 ### 4. API Documentation
-Every endpoint, method, and behavioral configuration has been meticulously mapped.  
-👉 **[Click here to read the complete API Documentation](API_DOCS.md)**
+The API is completely documented natively using **Swagger UI**. To access the ultimate interactive query dashboard, start the backend server and navigate your browser to:
+👉 **[http://127.0.0.1:5000/apidocs/](http://127.0.0.1:5000/apidocs/)**
+
+For statically rendered documentation mapping every single parameter, you can also view the standard markdown ledger.  
+👉 **[Click here to read the static API Documentation](API_DOCS.md)**

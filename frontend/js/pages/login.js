@@ -5,7 +5,12 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     const password = document.getElementById("password").value;
     const errorDiv = document.getElementById("error");
 
+    const btn = document.querySelector("button[type='submit']");
+    const originalText = btn.innerText;
+    
     errorDiv.innerText = "";
+    btn.innerText = "Processing...";
+    btn.disabled = true;
 
     try {
         const response = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
@@ -33,5 +38,8 @@ document.getElementById("loginForm").addEventListener("submit", async function (
         window.location.href = "dashboard.html";
     } catch (error) {
         errorDiv.innerText = error.message;
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
     }
 });

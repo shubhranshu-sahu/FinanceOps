@@ -104,8 +104,10 @@ pytest tests/ -v     # Ignite the Pytest Engine
 ```
 
 ### 4. API Documentation
-The API is completely documented natively using **Swagger UI**. To access the ultimate interactive query dashboard, start the backend server and navigate your browser to:
-👉 **[http://127.0.0.1:5000/apidocs/](http://127.0.0.1:5000/apidocs/)**
+The API is completely documented natively using **Swagger UI**. To access the ultimate interactive query dashboard, you can utilize the Live Production Cloud instance:
+👉 **[Production API: https://financeops-pgwv.onrender.com/apidocs/](https://financeops-pgwv.onrender.com/apidocs/)**
+
+*(Or start the backend server locally and navigate to `http://127.0.0.1:5000/apidocs/`)*
 
 For statically rendered documentation mapping every single parameter, you can also view the standard markdown ledger.  
 👉 **[Click here to read the static API Documentation](API_DOCS.md)**

@@ -8,8 +8,13 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     const errorDiv = document.getElementById("error");
     const successDiv = document.getElementById("success");
 
+    const btn = document.querySelector("button[type='submit']");
+    const originalText = btn.innerText;
+
     errorDiv.innerText = "";
     successDiv.innerText = "";
+    btn.innerText = "Registering...";
+    btn.disabled = true;
 
     try {
         const response = await fetch(`${CONFIG.API_BASE_URL}/auth/register`, {
@@ -39,5 +44,10 @@ document.getElementById("registerForm").addEventListener("submit", async functio
 
     } catch (error) {
         errorDiv.innerText = error.message;
+    } finally {
+        if (!successDiv.innerText) {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
     }
 });

@@ -9,7 +9,7 @@ from app.middleware.auth_middleware import login_required, role_required
 user_bp = Blueprint("users", __name__, url_prefix="/users")
 
 
-@user_bp.route("/", methods=["GET"])
+@user_bp.route("", methods=["GET"])
 @login_required
 @role_required("ADMIN")
 def list_users():

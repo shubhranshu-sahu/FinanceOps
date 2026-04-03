@@ -56,6 +56,10 @@ def get_transactions(filters, page=1, per_page=10):
     if "category" in filters:
         query = query.join(Category).filter(Category.name == filters["category"].lower())
 
+    # Search filter (by description text)
+    if "search" in filters and filters["search"].strip():
+        query = query.filter(Transaction.description.ilike(f"%{filters['search'].strip()}%"))
+
     # Date filter
     if "date" in filters:
         query = query.filter(Transaction.date == filters["date"])

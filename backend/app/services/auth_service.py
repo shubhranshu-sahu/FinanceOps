@@ -30,6 +30,9 @@ def login_user(data):
     if not user or not verify_password(data["password"], user.password_hash):
         raise ValueError("Invalid credentials")
 
+    if not user.is_active:
+        raise ValueError("Account is disabled. Please contact a system administrator.")
+
     token = generate_token(user)
 
     return token, user

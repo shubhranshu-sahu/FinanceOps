@@ -19,8 +19,14 @@ function toggleLoader(show) {
     }
 }
 
-// 🔐 Role-based UI
+// 🔐 Role-based UI & RBAC
+if (user.role === "VIEWER") {
+    alert("AUTHORIZATION DENIED: Viewers cannot access raw transaction ledgers.");
+    window.location.href = "dashboard.html";
+}
+
 if (user.role !== "ADMIN") {
+    // Analysts can view, but cannot create or manipulate data blocks
     const adminSection = document.getElementById("adminSection");
     if(adminSection) adminSection.style.display = "none";
     
@@ -42,12 +48,16 @@ async function loadCategories() {
         
         const dropdown = document.getElementById("category");
         const editDropdown = document.getElementById("editCategory");
+        const filterDropdown = document.getElementById("filterCategory");
+
         if(dropdown) dropdown.innerHTML = "";
         if(editDropdown) editDropdown.innerHTML = "";
+        if(filterDropdown) filterDropdown.innerHTML = '<option value="">All Categories</option>';
 
         data.forEach(c => {
             if(dropdown) dropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
             if(editDropdown) editDropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            if(filterDropdown) filterDropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
         });
     } catch(err) {
         console.error(err);
@@ -55,11 +65,22 @@ async function loadCategories() {
     toggleLoader(false);
 }
 
-// 🔹 Load Transactions
+// 🔹 Load Transactions (With Filters)
 async function loadTransactions() {
     toggleLoader(true);
     let url = `${CONFIG.API_BASE_URL}/transactions?page=${currentPage}&per_page=${currentPerPage}`;
     if (showDeleted) url += "&deleted=true";
+
+    // Grab filters
+    const fSearch = document.getElementById("filterSearch")?.value.trim();
+    const fType = document.getElementById("filterType")?.value;
+    const fCat = document.getElementById("filterCategory")?.value;
+    const fDate = document.getElementById("filterDate")?.value;
+
+    if (fSearch) url += `&search=${encodeURIComponent(fSearch)}`;
+    if (fType) url += `&type=${fType}`;
+    if (fCat) url += `&category_id=${fCat}`;
+    if (fDate) url += `&date=${fDate}`;
 
     try {
         const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
@@ -126,6 +147,21 @@ function changePage(direction) {
 function changePerPage() {
     const val = document.getElementById('perPage').value;
     currentPerPage = parseInt(val);
+    currentPage = 1;
+    loadTransactions();
+}
+
+// 🔹 Filter Subsystems
+function applyFilters() {
+    currentPage = 1;
+    loadTransactions();
+}
+
+function resetFilters() {
+    document.getElementById("filterSearch").value = "";
+    document.getElementById("filterType").value = "";
+    document.getElementById("filterCategory").value = "";
+    document.getElementById("filterDate").value = "";
     currentPage = 1;
     loadTransactions();
 }

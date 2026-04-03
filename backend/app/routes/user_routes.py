@@ -13,6 +13,17 @@ user_bp = Blueprint("users", __name__, url_prefix="/users")
 @login_required
 @role_required("ADMIN")
 def list_users():
+    """
+    List all platform users.
+    ---
+    tags:
+      - Users
+    security:
+      - Bearer: []
+    responses:
+      200:
+        description: Array of users returned.
+    """
     users = get_all_users()
 
     result = []
@@ -32,6 +43,31 @@ def list_users():
 @login_required
 @role_required("ADMIN")
 def change_role(user_id):
+    """
+    Escalate or revoke User Role.
+    ---
+    tags:
+      - Users
+    security:
+      - Bearer: []
+    parameters:
+      - name: user_id
+        in: path
+        type: integer
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            role:
+              type: string
+              example: ANALYST
+    responses:
+      200:
+        description: Role updated.
+    """
     data = request.get_json()
 
     try:
@@ -45,6 +81,31 @@ def change_role(user_id):
 @login_required
 @role_required("ADMIN")
 def change_status(user_id):
+    """
+    Freeze or unfreeze a User Account.
+    ---
+    tags:
+      - Users
+    security:
+      - Bearer: []
+    parameters:
+      - name: user_id
+        in: path
+        type: integer
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            is_active:
+              type: boolean
+              example: false
+    responses:
+      200:
+        description: Status updated.
+    """
     data = request.get_json()
 
     try:

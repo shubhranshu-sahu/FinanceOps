@@ -8,6 +8,8 @@ from app.services.transaction_service import (
     restore_transaction
 )
 from app.middleware.auth_middleware import login_required, role_required
+from app.schemas.transaction_schema import transaction_schema, transaction_update_schema
+from marshmallow import ValidationError
 
 txn_bp = Blueprint("transactions", __name__, url_prefix="/transactions")
 
@@ -19,7 +21,12 @@ def create_txn():
     data = request.get_json()
 
     try:
-        txn = create_transaction(data, request.user.id)
+        validated_data = transaction_schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "fields": err.messages}), 400
+
+    try:
+        txn = create_transaction(validated_data, request.user.id)
         return jsonify({"message": "Transaction created"}), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
@@ -70,7 +77,12 @@ def update_txn(txn_id):
     data = request.get_json()
 
     try:
-        update_transaction(txn_id, data)
+        validated_data = transaction_update_schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "fields": err.messages}), 400
+
+    try:
+        update_transaction(txn_id, validated_data)
         return jsonify({"message": "Transaction updated"}), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400

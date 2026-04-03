@@ -18,7 +18,7 @@ if (user.role === "VIEWER") {
     if (userL) userL.style.display = "none";
 }
 
-// 🌐 Global Loader Toggle
+//  Global Loader Toggle
 function toggleLoader(show) {
     const loader = document.getElementById('loader');
     if (loader) {
@@ -35,6 +35,13 @@ async function loadDashboard() {
                 "Authorization": `Bearer ${token}`
             }
         });
+
+        if (res.status === 401 || res.status === 403) {
+            alert("SECURITY EXCEPTION: Unauthorized access or tampered session detected.");
+            localStorage.clear();
+            window.location.href = "login.html";
+            return;
+        }
 
         const data = await res.json();
 

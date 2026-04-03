@@ -10,7 +10,7 @@ if (!token) {
     window.location.href = "login.html";
 }
 
-// 🌐 Global Loader Toggle
+//  Global Loader Toggle
 function toggleLoader(show) {
     const loader = document.getElementById('loader');
     if (loader) {
@@ -28,45 +28,53 @@ if (user.role === "VIEWER") {
 if (user.role === "ANALYST") {
     // Analysts can view, but cannot create or manipulate data blocks
     const adminSection = document.getElementById("adminSection");
-    if(adminSection) adminSection.style.display = "none";
-    
+    if (adminSection) adminSection.style.display = "none";
+
     // Disable access to Recycle Bin for Analysts
     const recycleBtn = document.getElementById("toggleRecycleBtn");
-    if(recycleBtn) recycleBtn.style.display = "none";
-    
+    if (recycleBtn) recycleBtn.style.display = "none";
+
     const userLink = document.getElementById("userLink");
-    if(userLink) userLink.style.display = "none";
+    if (userLink) userLink.style.display = "none";
 }
 
-// 🔹 Load Categories
+//  Load Categories
 async function loadCategories() {
     toggleLoader(true);
     try {
         const res = await fetch(`${CONFIG.API_BASE_URL}/categories`, {
             headers: { Authorization: `Bearer ${token}` }
         });
+
+        if (res.status === 401 || res.status === 403) {
+            alert("SECURITY EXCEPTION: Unauthorized access or tampered session detected.");
+            localStorage.clear();
+            window.location.href = "login.html";
+            return;
+        }
+
         const data = await res.json();
-        
+
         const dropdown = document.getElementById("category");
         const editDropdown = document.getElementById("editCategory");
         const filterDropdown = document.getElementById("filterCategory");
 
-        if(dropdown) dropdown.innerHTML = "";
-        if(editDropdown) editDropdown.innerHTML = "";
-        if(filterDropdown) filterDropdown.innerHTML = '<option value="">All Categories</option>';
+        if (dropdown) dropdown.innerHTML = "";
+        if (editDropdown) editDropdown.innerHTML = "";
+        if (filterDropdown) filterDropdown.innerHTML = '<option value="">All Categories</option>';
 
         data.forEach(c => {
-            if(dropdown) dropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-            if(editDropdown) editDropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-            if(filterDropdown) filterDropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            if (dropdown) dropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            if (editDropdown) editDropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            if (filterDropdown) filterDropdown.innerHTML += `<option value="${c.id}">${c.name}</option>`;
         });
-    } catch(err) {
+    } catch (err) {
         console.error(err);
     }
     toggleLoader(false);
 }
 
-// 🔹 Load Transactions (With Filters)
+//  Load Transactions (With Filters)
 async function loadTransactions() {
     toggleLoader(true);
     let url = `${CONFIG.API_BASE_URL}/transactions?page=${currentPage}&per_page=${currentPerPage}`;
@@ -87,14 +95,22 @@ async function loadTransactions() {
 
     try {
         const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+
+        if (res.status === 401 || res.status === 403) {
+            alert("SECURITY EXCEPTION: Unauthorized access or tampered session detected.");
+            localStorage.clear();
+            window.location.href = "login.html";
+            return;
+        }
+
         const data = await res.json();
 
         const table = document.getElementById("txnTable");
         table.innerHTML = "";
 
         // Check if backend returns paginated object API
-        const items = data.transactions || data; 
-        
+        const items = data.transactions || data;
+
         if (data.total !== undefined) {
             totalPages = data.pages;
             document.getElementById("pageInfo").innerText = `Page ${data.page} / ${data.pages}`;
@@ -115,13 +131,13 @@ async function loadTransactions() {
                 </tr>
             `;
         });
-    } catch(err) {
+    } catch (err) {
         console.error(err);
     }
     toggleLoader(false);
 }
 
-// 🔹 Action Buttons
+//  Action Buttons
 function actionButtons(t, rowStr) {
     if (showDeleted) {
         return `
@@ -136,7 +152,7 @@ function actionButtons(t, rowStr) {
     `;
 }
 
-// 🔹 Pagination Handlers
+//  Pagination Handlers
 function changePage(direction) {
     if (direction === -1 && currentPage > 1) {
         currentPage--;
@@ -154,7 +170,7 @@ function changePerPage() {
     loadTransactions();
 }
 
-// 🔹 Filter Subsystems
+//  Filter Subsystems
 function applyFilters() {
     currentPage = 1;
     loadTransactions();
@@ -170,18 +186,29 @@ function resetFilters() {
     loadTransactions();
 }
 
-// 🔹 Create Transaction
+//  Create Transaction
 async function createTransaction() {
+    const amount = document.getElementById("amount").value;
+    const type = document.getElementById("type").value;
+    const category_id = document.getElementById("category").value;
+    const date = document.getElementById("date").value;
+    const description = document.getElementById("desc").value;
+
+    if (!amount || !type || !category_id || !date) {
+        alert("VALIDATION FAILED: Please fill out Amount, Type, Category, and Date fields before inserting records.");
+        return;
+    }
+
     toggleLoader(true);
     const body = {
-        amount: document.getElementById("amount").value,
-        type: document.getElementById("type").value,
-        category_id: document.getElementById("category").value,
-        date: document.getElementById("date").value,
-        description: document.getElementById("desc").value
+        amount: amount,
+        type: type,
+        category_id: category_id,
+        date: date,
+        description: description
     };
 
-    await fetch(`${CONFIG.API_BASE_URL}/transactions`, {
+    const res = await fetch(`${CONFIG.API_BASE_URL}/transactions`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -193,7 +220,7 @@ async function createTransaction() {
     await loadTransactions();
 }
 
-// 🔹 Soft Delete
+//  Soft Delete
 async function deleteTransaction(id) {
     toggleLoader(true);
     await fetch(`${CONFIG.API_BASE_URL}/transactions/${id}`, {
@@ -203,7 +230,7 @@ async function deleteTransaction(id) {
     await loadTransactions();
 }
 
-// 🔹 Restore Transaction
+//  Restore Transaction
 async function restoreTransaction(id) {
     toggleLoader(true);
     await fetch(`${CONFIG.API_BASE_URL}/transactions/${id}/restore`, {
@@ -213,9 +240,9 @@ async function restoreTransaction(id) {
     await loadTransactions();
 }
 
-// 🔹 Permanent Delete
+//  Permanent Delete
 async function permanentDelete(id) {
-    if(!confirm("Are you sure you want to completely erase this record?")) return;
+    if (!confirm("Are you sure you want to completely erase this record?")) return;
     toggleLoader(true);
     await fetch(`${CONFIG.API_BASE_URL}/transactions/${id}/permanent`, {
         method: "DELETE",
@@ -224,23 +251,23 @@ async function permanentDelete(id) {
     await loadTransactions();
 }
 
-// 🔹 Toggle Recycle Bin
+//  Toggle Recycle Bin
 function toggleRecycle() {
     showDeleted = !showDeleted;
     currentPage = 1; // Reset to page 1 on toggle
     loadTransactions();
 }
 
-// 🔹 Edit Modal Subsystems
+//  Edit Modal Subsystems
 let editModalInstance = null;
 
 function openEditModal(rowStr) {
     const t = JSON.parse(decodeURIComponent(rowStr));
-    
+
     document.getElementById('editId').value = t.id;
     document.getElementById('editAmount').value = t.amount;
     document.getElementById('editType').value = t.type;
-    
+
     const catSelect = document.getElementById('editCategory');
     for (let i = 0; i < catSelect.options.length; i++) {
         if (catSelect.options[i].text === t.category) {
@@ -248,11 +275,11 @@ function openEditModal(rowStr) {
             break;
         }
     }
-    
+
     document.getElementById('editDate').value = t.date;
     document.getElementById('editDesc').value = t.description;
-    
-    if(!editModalInstance) {
+
+    if (!editModalInstance) {
         editModalInstance = new bootstrap.Modal(document.getElementById('editModal'));
     }
     editModalInstance.show();
@@ -260,16 +287,27 @@ function openEditModal(rowStr) {
 
 async function submitEdit() {
     const id = document.getElementById('editId').value;
+    const amount = document.getElementById("editAmount").value;
+    const type = document.getElementById("editType").value;
+    const category_id = document.getElementById("editCategory").value;
+    const date = document.getElementById("editDate").value;
+    const description = document.getElementById("editDesc").value;
+
+    if (!amount || !type || !category_id || !date) {
+        alert("VALIDATION FAILED: Please fill out Amount, Type, Category, and Date fields before saving amendments.");
+        return;
+    }
+
     const body = {
-        amount: document.getElementById("editAmount").value,
-        type: document.getElementById("editType").value,
-        category_id: document.getElementById("editCategory").value,
-        date: document.getElementById("editDate").value,
-        description: document.getElementById("editDesc").value
+        amount: amount,
+        type: type,
+        category_id: category_id,
+        date: date,
+        description: description
     };
 
     toggleLoader(true);
-    await fetch(`${CONFIG.API_BASE_URL}/transactions/${id}`, {
+    const res = await fetch(`${CONFIG.API_BASE_URL}/transactions/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -277,17 +315,17 @@ async function submitEdit() {
         },
         body: JSON.stringify(body)
     });
-    
-    if(editModalInstance) editModalInstance.hide();
+
+    if (editModalInstance) editModalInstance.hide();
     await loadTransactions();
 }
 
-// 🔹 Logout
+//  Logout
 function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
 
-// 🔄 Initial Trigger
+//  Initial Trigger
 loadCategories();
 loadTransactions();

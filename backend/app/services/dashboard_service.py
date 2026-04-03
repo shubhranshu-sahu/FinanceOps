@@ -7,7 +7,7 @@ from sqlalchemy import func
 
 def get_dashboard_summary():
 
-    # 🔹 Total Income
+    #  Total Income
     total_income = db.session.query(
         func.coalesce(func.sum(Transaction.amount), 0)
     ).filter(
@@ -15,7 +15,7 @@ def get_dashboard_summary():
         Transaction.is_deleted == False
     ).scalar()
 
-    # 🔹 Total Expense
+    #  Total Expense
     total_expense = db.session.query(
         func.coalesce(func.sum(Transaction.amount), 0)
     ).filter(
@@ -23,10 +23,10 @@ def get_dashboard_summary():
         Transaction.is_deleted == False
     ).scalar()
 
-    # 🔹 Net Balance
+    #  Net Balance
     net_balance = total_income - total_expense
 
-    # 🔹 Category Breakdown
+    #  Category Breakdown
     category_data = db.session.query(
         Category.name,
         func.sum(Transaction.amount)
@@ -39,7 +39,7 @@ def get_dashboard_summary():
         for name, total in category_data
     ]
 
-    # 🔹 Recent Transactions (last 5)
+    #  Recent Transactions (last 5)
     recent = Transaction.query.filter_by(is_deleted=False) \
         .order_by(Transaction.created_at.desc()) \
         .limit(5).all()
@@ -55,7 +55,7 @@ def get_dashboard_summary():
         for t in recent
     ]
 
-    # 🔹 Monthly Trends
+    #  Monthly Trends
     monthly_data = db.session.query(
         func.date_format(Transaction.date, "%Y-%m"),
         func.sum(Transaction.amount)

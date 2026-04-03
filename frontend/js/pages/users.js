@@ -21,13 +21,21 @@ if (user.role !== "ADMIN") {
 }
 
 
-// 🔹 Load Users Ledger
+//  Load Users Ledger
 async function loadUsers() {
     toggleLoader(true);
     try {
         const res = await fetch(`${CONFIG.API_BASE_URL}/users`, {
             headers: { Authorization: `Bearer ${token}` }
         });
+
+        if (res.status === 401 || res.status === 403) {
+            alert("SECURITY EXCEPTION: Unauthorized access or tampered session detected.");
+            localStorage.clear();
+            window.location.href = "login.html";
+            return;
+        }
+
         const data = await res.json();
 
         const table = document.getElementById("userTable");
@@ -73,7 +81,7 @@ async function loadUsers() {
     toggleLoader(false);
 }
 
-// 🔹 Toggle Freeze Status (Enable/Disable)
+//  Toggle Freeze Status (Enable/Disable)
 async function toggleFreeze(id, newStatus) {
     toggleLoader(true);
     try {
@@ -96,7 +104,7 @@ async function toggleFreeze(id, newStatus) {
     await loadUsers();
 }
 
-// 🔹 Modal Controllers
+//  Modal Controllers
 let roleModalInstance = null;
 
 function openRoleModal(id, currentName, currentRole) {
@@ -110,7 +118,7 @@ function openRoleModal(id, currentName, currentRole) {
     roleModalInstance.show();
 }
 
-// 🔹 Escalate / Modify Role
+//  Escalate / Modify Role
 async function submitRoleUpdate() {
     const id = document.getElementById('editUserId').value;
     const newRole = document.getElementById('editRole').value;
@@ -138,11 +146,11 @@ async function submitRoleUpdate() {
     await loadUsers();
 }
 
-// 🔹 Logout Function
+//  Logout Function
 function logout() {
     localStorage.clear();
     window.location.href = "login.html";
 }
 
-// 🔄 Initiator
+//  Initiator
 loadUsers();

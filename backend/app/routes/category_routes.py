@@ -1,6 +1,9 @@
 from flask import Blueprint, request, jsonify
 from app.services.category_service import create_category, get_categories, update_category_status, update_category_name
 from app.middleware.auth_middleware import login_required, role_required
+from app.middleware.auth_middleware import login_required, role_required
+from app.schemas.category_schema import category_schema
+from marshmallow import ValidationError
 
 cat_bp = Blueprint("categories", __name__, url_prefix="/categories")
 
@@ -12,7 +15,12 @@ def create_cat():
     data = request.get_json()
 
     try:
-        category = create_category(data, request.user.id)
+        validated_data = category_schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "fields": err.messages}), 400
+
+    try:
+        category = create_category(validated_data, request.user.id)
         return jsonify({"message": "Category created"}), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
@@ -54,8 +62,14 @@ def change_category_status(cat_id):
 @role_required("ADMIN")
 def rename_category(cat_id):
     data = request.get_json()
+
     try:
-        update_category_name(cat_id, data["name"])
+        validated_data = category_schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "fields": err.messages}), 400
+
+    try:
+        update_category_name(cat_id, validated_data["name"])
         return jsonify({"message": "Category renamed"}), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400

@@ -27,8 +27,13 @@ def create_txn():
 
 @txn_bp.route("", methods=["GET"])
 @login_required
+@role_required("ADMIN", "ANALYST")
 def list_txns():
     filters = request.args.to_dict()
+
+    if request.user.role.value == "ANALYST" and filters.get("deleted") == "true":
+        return jsonify({"error": "Forbidden: Analysts cannot access the recycle bin."}), 403
+
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
 

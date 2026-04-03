@@ -64,8 +64,21 @@ def get_transactions(filters, page=1, per_page=10):
     if "date" in filters:
         query = query.filter(Transaction.date == filters["date"])
 
-    # Sorting -> latest first by actual creation time
-    query = query.order_by(Transaction.created_at.desc())
+    # Sorting logic
+    if "sort_by" in filters:
+        sb = filters["sort_by"]
+        if sb == "date_desc":
+            query = query.order_by(Transaction.date.desc(), Transaction.id.desc())
+        elif sb == "date_asc":
+            query = query.order_by(Transaction.date.asc(), Transaction.id.asc())
+        elif sb == "amount_desc":
+            query = query.order_by(Transaction.amount.desc(), Transaction.id.desc())
+        elif sb == "amount_asc":
+            query = query.order_by(Transaction.amount.asc(), Transaction.id.asc())
+        else:
+            query = query.order_by(Transaction.created_at.desc())
+    else:
+        query = query.order_by(Transaction.created_at.desc())
 
     # Return paginated results
     return query.paginate(page=page, per_page=per_page, error_out=False)

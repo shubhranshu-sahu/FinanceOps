@@ -25,13 +25,14 @@ if (user.role === "VIEWER") {
     window.location.href = "dashboard.html";
 }
 
-if (user.role !== "ADMIN") {
+if (user.role === "ANALYST") {
     // Analysts can view, but cannot create or manipulate data blocks
     const adminSection = document.getElementById("adminSection");
     if(adminSection) adminSection.style.display = "none";
     
-    const catLink = document.getElementById("catLink");
-    if(catLink) catLink.style.display = "none";
+    // Disable access to Recycle Bin for Analysts
+    const recycleBtn = document.getElementById("toggleRecycleBtn");
+    if(recycleBtn) recycleBtn.style.display = "none";
     
     const userLink = document.getElementById("userLink");
     if(userLink) userLink.style.display = "none";
@@ -76,11 +77,13 @@ async function loadTransactions() {
     const fType = document.getElementById("filterType")?.value;
     const fCat = document.getElementById("filterCategory")?.value;
     const fDate = document.getElementById("filterDate")?.value;
+    const fSort = document.getElementById("filterSort")?.value;
 
     if (fSearch) url += `&search=${encodeURIComponent(fSearch)}`;
     if (fType) url += `&type=${fType}`;
     if (fCat) url += `&category_id=${fCat}`;
     if (fDate) url += `&date=${fDate}`;
+    if (fSort) url += `&sort_by=${fSort}`;
 
     try {
         const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
@@ -162,6 +165,7 @@ function resetFilters() {
     document.getElementById("filterType").value = "";
     document.getElementById("filterCategory").value = "";
     document.getElementById("filterDate").value = "";
+    document.getElementById("filterSort").value = "created_desc";
     currentPage = 1;
     loadTransactions();
 }

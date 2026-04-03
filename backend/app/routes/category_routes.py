@@ -20,6 +20,7 @@ def create_cat():
 
 @cat_bp.route("", methods=["GET"])
 @login_required
+@role_required("ADMIN", "ANALYST")
 def list_categories():
     include_disabled = request.args.get("all") == "true"
     categories = get_categories(include_disabled)

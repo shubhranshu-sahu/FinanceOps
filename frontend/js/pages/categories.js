@@ -14,10 +14,20 @@ function toggleLoader(show) {
     }
 }
 
-// 🔐 Role-based check (Only ADMINS should be in this page)
-if (user.role !== "ADMIN") {
-    alert("Unauthorized access. Admin privileges required.");
+// 🔐 Role-based UI & RBAC
+if (user.role === "VIEWER") {
+    alert("AUTHORIZATION DENIED: Viewers cannot access raw category datasets.");
     window.location.href = "dashboard.html";
+}
+
+if (user.role === "ANALYST") {
+    // Analysts can view Categories but cannot Define Structure
+    const createSection = document.querySelector(".gs-table.p-4"); // Hides the card holding Define Structure
+    if(createSection) createSection.style.display = "none";
+    
+    // Links to hide
+    const userLink = document.getElementById("userLink");
+    if(userLink) userLink.style.display = "none";
 }
 
 
@@ -46,14 +56,19 @@ async function loadCategories() {
             // Capitalize category name for presentation
             const presName = c.name.charAt(0).toUpperCase() + c.name.slice(1);
 
+            // Action Buttons mapping (Hide for Analyst)
+            const actionSection = user.role === "ADMIN" 
+                ? ` <button class="btn btn-neo py-1 px-3 me-2 bg-white" onclick="openEditModal(${c.id}, '${c.name.replace(/'/g, "\\'")}')">Edit</button>
+                    ${toggleButton}`
+                : `<span class="fw-bold text-muted mt-2 d-inline-block">-- READ ONLY --</span>`;
+
             table.innerHTML += `
                 <tr class="${!c.is_active ? 'opacity-75' : ''}">
-                    <td class="text-dark">${c.id}</td>
-                    <td class="text-dark fs-5">${presName}</td>
-                    <td class="text-dark">${statusLabel}</td>
-                    <td class="text-center">
-                        <button class="btn btn-neo py-1 px-3 me-2 bg-white" onclick="openEditModal(${c.id}, '${c.name.replace(/'/g, "\\'")}')">Edit</button>
-                        ${toggleButton}
+                    <td class="text-dark align-middle">${c.id}</td>
+                    <td class="text-dark fs-5 align-middle">${presName}</td>
+                    <td class="text-dark align-middle">${statusLabel}</td>
+                    <td class="text-center align-middle">
+                        ${actionSection}
                     </td>
                 </tr>
             `;

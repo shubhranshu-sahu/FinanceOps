@@ -6,69 +6,197 @@
     --primary-color: #4ade80;
     --secondary-color: #fca5a5;
     --card-bg: #ffffff;
-    
+
     --border-width: 3px;
     --shadow-offset: 6px;
     --shadow-color: #000000;
     --neo-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--shadow-color);
     --neo-shadow-hover: 2px 2px 0px var(--shadow-color);
-    
+
     --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-heading: 'Impact', 'Arial Black', sans-serif;
 }
 
-body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); }
-h1, h2, h3, h4, h5, h6, .brand-font { font-weight: 900; letter-spacing: -0.5px; color: var(--text-color); }
-
-input, select, textarea {
-    background-color: #ffffff !important; color: var(--text-color) !important;
-    border: var(--border-width) solid var(--border-color) !important; border-radius: 0 !important;
-    box-shadow: 4px 4px 0px var(--shadow-color) !important; transition: all 0.1s;
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
 }
-input:focus, select:focus, textarea:focus { box-shadow: 2px 2px 0px var(--shadow-color) !important; transform: translate(2px, 2px); outline: none !important; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand-font {
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: var(--text-color);
+}
+
+input,
+select,
+textarea {
+    background-color: #ffffff !important;
+    color: var(--text-color) !important;
+    border: var(--border-width) solid var(--border-color) !important;
+    border-radius: 0 !important;
+    box-shadow: 4px 4px 0px var(--shadow-color) !important;
+    transition: all 0.1s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    box-shadow: 2px 2px 0px var(--shadow-color) !important;
+    transform: translate(2px, 2px);
+    outline: none !important;
+}
 
 .btn-neo {
-    background-color: var(--card-bg); color: var(--text-color); border: var(--border-width) solid var(--border-color); border-radius: 0;
-    font-weight: bold; font-size: 1.1rem; padding: 10px 24px; position: relative; box-shadow: var(--neo-shadow);
-    transition: all 0.15s ease-in-out; text-transform: uppercase; text-decoration: none; display: inline-block;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 10px 24px;
+    position: relative;
+    box-shadow: var(--neo-shadow);
+    transition: all 0.15s ease-in-out;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
 }
-.btn-neo:hover { transform: translate(3px, 3px); box-shadow: var(--neo-shadow-hover); color: var(--text-color) !important; }
-.btn-neo.bg-white:hover { background-color: #f0f0f0 !important; color: var(--text-color) !important; }
-.btn-neo-primary { background-color: var(--primary-color); }
-.btn-neo-primary:hover { background-color: var(--primary-color); filter: brightness(95%); color: var(--text-color) !important; }
+
+.btn-neo:hover {
+    transform: translate(3px, 3px);
+    box-shadow: var(--neo-shadow-hover);
+    color: var(--text-color) !important;
+}
+
+.btn-neo.bg-white:hover {
+    background-color: #f0f0f0 !important;
+    color: var(--text-color) !important;
+}
+
+.btn-neo-primary {
+    background-color: var(--primary-color);
+}
+
+.btn-neo-primary:hover {
+    background-color: var(--primary-color);
+    filter: brightness(95%);
+    color: var(--text-color) !important;
+}
 
 .card-neo {
-    background-color: var(--card-bg); border: var(--border-width) solid var(--border-color); border-radius: 0;
-    box-shadow: var(--neo-shadow); transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 20px;
+    background-color: var(--card-bg);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0;
+    box-shadow: var(--neo-shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 20px;
 }
-.card-neo:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--shadow-color); }
-.card-neo .card-title { font-weight: 800; border-bottom: var(--border-width) solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px; font-size: 1.4rem; }
 
-.navbar-neo { border-bottom: var(--border-width) solid var(--border-color); background-color: var(--card-bg); }
+.card-neo:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px var(--shadow-color);
+}
 
-.nav-hover-fx { transition: transform 0.1s, padding 0.1s; border-radius: 0px; }
-.nav-hover-fx:hover { background-color: var(--text-color); color: var(--bg-color) !important; transform: translateX(4px); }
+.card-neo .card-title {
+    font-weight: 800;
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+}
 
-.table-neo { width: 100%; border-collapse: collapse; }
-.table-neo th, .table-neo td { border: var(--border-width) solid var(--border-color) !important; padding: 12px; background-color: var(--card-bg) !important; color: var(--text-color) !important; vertical-align: middle; }
-.table-neo thead th { background-color: #fde047 !important; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.5px; box-shadow: inset 0 -3px 0 var(--border-color); }
+.navbar-neo {
+    border-bottom: var(--border-width) solid var(--border-color);
+    background-color: var(--card-bg);
+}
 
-a { color: var(--text-color); font-weight: bold; }
-a:hover { color: var(--text-color); text-decoration-thickness: 2px; }
+.nav-hover-fx {
+    transition: transform 0.1s, padding 0.1s;
+    border-radius: 0px;
+}
+
+.nav-hover-fx:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color) !important;
+    transform: translateX(4px);
+}
+
+.table-neo {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-neo th,
+.table-neo td {
+    border: var(--border-width) solid var(--border-color) !important;
+    padding: 12px;
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    vertical-align: middle;
+}
+
+.table-neo thead th {
+    background-color: #fde047 !important;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: inset 0 -3px 0 var(--border-color);
+}
+
+a {
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+a:hover {
+    color: var(--text-color);
+    text-decoration-thickness: 2px;
+}
 
 /* Loader Overlay */
 .neo-loader-overlay {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: rgba(253, 250, 246, 0.85); z-index: 10000;
-    display: flex; justify-content: center; align-items: center; flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(253, 250, 246, 0.85);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
+
 .neo-loader-spinner {
-    width: 60px; height: 60px; background-color: var(--primary-color);
-    border: var(--border-width) solid var(--border-color); box-shadow: 4px 4px 0px var(--shadow-color);
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: 4px 4px 0px var(--shadow-color);
     animation: neoSpin 1.2s infinite ease-in-out;
 }
+
 @keyframes neoSpin {
-    0% { transform: perspective(120px) rotateX(0deg) rotateY(0deg); }
-    50% { transform: perspective(120px) rotateX(-180deg) rotateY(0deg); background-color: var(--secondary-color); }
-    100% { transform: perspective(120px) rotateX(-180deg) rotateY(-180deg); background-color: var(--primary-color); }
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    }
+
+    50% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(0deg);
+        background-color: var(--secondary-color);
+    }
+
+    100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-180deg);
+        background-color: var(--primary-color);
+    }
 }

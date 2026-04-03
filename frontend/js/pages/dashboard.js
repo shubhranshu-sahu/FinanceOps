@@ -1,7 +1,21 @@
 const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user") || "null");
 
-if (!token) {
+if (!token || !user) {
     window.location.href = "login.html";
+}
+
+// 🔐 Role-based check for Nav Bar visual hygiene
+if (user.role === "VIEWER") {
+    const txnL = document.getElementById("txnLink");
+    const catL = document.getElementById("catLink");
+    const userL = document.getElementById("userLink");
+    if (txnL) txnL.style.display = "none";
+    if (catL) catL.style.display = "none";
+    if (userL) userL.style.display = "none";
+} else if (user.role === "ANALYST") {
+    const userL = document.getElementById("userLink");
+    if (userL) userL.style.display = "none";
 }
 
 // 🌐 Global Loader Toggle

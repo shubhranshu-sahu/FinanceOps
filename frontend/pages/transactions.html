@@ -51,7 +51,7 @@
     <div class="container pb-5 gs-reveal">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <h2 class="brand-font display-5 mb-0">/// Transactions Hub</h2>
-            <button class="btn btn-neo" style="background-color: #fde047;" onclick="toggleRecycle()">Toggle Recycle
+            <button id="toggleRecycleBtn" class="btn btn-neo" style="background-color: #fde047;" onclick="toggleRecycle()">Toggle Recycle
                 Bin</button>
         </div>
 
@@ -96,15 +96,15 @@
         <!-- Filter & Search Query Panel -->
         <div class="card-neo p-3 bg-light mb-5 border-3 border-dark gs-table" style="box-shadow: 4px 4px 0px #000;">
             <div class="row g-2 align-items-end">
-                <div class="col-md-3">
-                    <label class="fw-bold fs-6 text-dark mb-1">Search Keywords</label>
+                <div class="col-md-2">
+                    <label class="fw-bold fs-6 text-dark mb-1">Keywords</label>
                     <input type="text" id="filterSearch" class="form-control border-dark border-2 shadow-none"
-                        placeholder="e.g. coffee, server invoice...">
+                        placeholder="search...">
                 </div>
                 <div class="col-md-2">
                     <label class="fw-bold fs-6 text-dark mb-1">Type</label>
                     <select id="filterType" class="form-select border-dark border-2 shadow-none">
-                        <option value="">All Types</option>
+                        <option value="">All</option>
                         <option value="INCOME">Income</option>
                         <option value="EXPENSE">Expense</option>
                     </select>
@@ -112,14 +112,24 @@
                 <div class="col-md-2">
                     <label class="fw-bold fs-6 text-dark mb-1">Category</label>
                     <select id="filterCategory" class="form-select border-dark border-2 shadow-none">
-                        <option value="">All Categories</option>
+                        <option value="">All</option>
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label class="fw-bold fs-6 text-dark mb-1">Exact Date</label>
+                    <label class="fw-bold fs-6 text-dark mb-1">Date</label>
                     <input type="date" id="filterDate" class="form-control border-dark border-2 shadow-none">
                 </div>
-                <div class="col-md-3 d-flex gap-2">
+                <div class="col-md-2">
+                    <label class="fw-bold fs-6 text-dark mb-1">Sort By</label>
+                    <select id="filterSort" class="form-select border-dark border-2 shadow-none">
+                        <option value="created_desc">Latest Inserted</option>
+                        <option value="date_desc">Newest Date</option>
+                        <option value="date_asc">Oldest Date</option>
+                        <option value="amount_desc">Highest Amount</option>
+                        <option value="amount_asc">Lowest Amount</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex gap-2">
                     <button class="btn btn-neo py-2 flex-grow-1" style="background-color: var(--primary-color);"
                         onclick="applyFilters()">Query</button>
                     <button class="btn btn-neo py-2 bg-white" onclick="resetFilters()">Clear</button>
